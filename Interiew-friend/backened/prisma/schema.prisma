@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("student")
+  year      String?
+  branch    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  interviews Interview[]
+  progress   Progress?
+}
+
+model RoleTrack {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  overview  String?
+  skills    String[]
+  createdAt DateTime @default(now())
+
+  questions Question[]
+  videos    Video[]
+}
+
+model Question {
+  id         String    @id @default(uuid())
+  roleId     String
+  role       RoleTrack @relation(fields: [roleId], references: [id])
+  text       String
+  type       String
+  difficulty String?
+  companyTag String?
+}
+
+model Video {
+  id         String    @id @default(uuid())
+  roleId     String
+  role       RoleTrack @relation(fields: [roleId], references: [id])
+  youtubeUrl String
+  title      String
+  level      String
+}
+
+model Interview {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  roleId     String?
+  score      Json?
+  transcript String?
+  createdAt  DateTime @default(now())
+}
+
+model Progress {
+  id             String @id @default(uuid())
+  userId         String @unique
+  user           User   @relation(fields: [userId], references: [id])
+  streak         Int    @default(0)
+  completedCount Int    @default(0)
+  weakSkills     String[]
+}
