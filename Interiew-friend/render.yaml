@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: interview-friend-api
+    runtime: node
+    rootDir: backened
+    buildCommand: npm ci && npx prisma generate
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMMA_MODEL
+        value: gemma-3-27b-it
+
+  - type: static
+    name: interview-friend-web
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://interview-friend-api.onrender.com/api

@@ -3,6 +3,8 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const contentRoutes = require("./routes/contentRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
@@ -20,9 +22,13 @@ app.get("/", (req, res) => {
   });
 });
 
+app.get("/health", (req, res) => res.json({ ok: true, service: "interview-friend-api" }));
+
 // API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/content", contentRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Handle Unknown Routes
 app.use((req, res) => {

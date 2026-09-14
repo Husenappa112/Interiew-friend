@@ -1,4 +1,27 @@
-# React + Vite
+# M AI Career Platform
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Start the API in a second terminal:
+
+```bash
+cd backened
+npm install
+npm start
+```
+
+The frontend runs on `http://localhost:5173` and the API on `http://localhost:5001`.
+
+Set `GEMINI_API_KEY` in `backened/.env` to enable the Gemma advisor. The default model is `gemma-3-27b-it`; override it with `GEMMA_MODEL` when needed.
+
+## Deploy
+
+`render.yaml` defines both the static frontend and Express backend. Create a Render Blueprint from this repository, then provide `DATABASE_URL`, `JWT_SECRET`, and `GEMINI_API_KEY` as secret environment variables. GitHub Actions verifies both projects on every push and pull request.
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
