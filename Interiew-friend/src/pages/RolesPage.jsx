@@ -99,20 +99,20 @@ const additionalRoles = [
 ];
 
 const roleResources = {
-  'Frontend Developer': { tech: 'HTML, CSS, JavaScript, React, TypeScript, accessibility', platforms: ['freeCodeCamp', 'The Odin Project', 'Frontend Mentor'] },
-  'Backend Developer': { tech: 'Node.js, Express, REST APIs, PostgreSQL, Redis, Docker', platforms: ['MDN Web Docs', 'Roadmap.sh', 'Postman Academy'] },
-  'Java Engineer': { tech: 'Java, OOP, Collections, Spring Boot, SQL, JUnit', platforms: ['Spring Academy', 'HackerRank Java', 'LeetCode'] },
-  'Python Engineer': { tech: 'Python, FastAPI/Django, SQL, testing, Docker', platforms: ['Python Docs', 'Real Python', 'HackerRank Python'] },
-  'Cloud Engineer': { tech: 'Linux, networking, AWS/Azure, Docker, Kubernetes, Terraform', platforms: ['AWS Skill Builder', 'Microsoft Learn', 'Cisco Networking Academy'] },
-  'Full Stack Developer': { tech: 'React, Node.js, APIs, authentication, PostgreSQL, deployment', platforms: ['Full Stack Open', 'The Odin Project', 'Vercel'] },
-  'DevOps Engineer': { tech: 'Linux, Bash, Git, Docker, CI/CD, Kubernetes, Terraform', platforms: ['KodeKloud', 'AWS Skill Builder', 'Play with Docker'] },
-  'Data Analyst': { tech: 'Excel, SQL, Power BI/Tableau, Python, statistics', platforms: ['Kaggle Learn', 'Microsoft Learn', 'DataCamp free lessons'] },
-  'Data Scientist': { tech: 'Python, SQL, statistics, Pandas, scikit-learn, visualization', platforms: ['Kaggle Learn', 'Google Colab', 'IBM SkillsBuild'] },
-  'Machine Learning Engineer': { tech: 'Python, statistics, scikit-learn, PyTorch/TensorFlow, MLOps', platforms: ['Google ML Crash Course', 'Kaggle', 'Hugging Face Course'] },
-  'Cybersecurity Analyst': { tech: 'Networking, Linux, Python, OWASP, SIEM, incident response', platforms: ['Cisco Networking Academy', 'TryHackMe', 'PortSwigger Web Security Academy'] },
-  'QA Automation Engineer': { tech: 'Testing fundamentals, Selenium/Playwright, APIs, CI/CD, SQL', platforms: ['Test Automation University', 'Playwright Docs', 'Postman Academy'] },
-  'Mobile App Developer': { tech: 'Dart/Flutter or Kotlin, state management, APIs, testing', platforms: ['Flutter Learn', 'Android Developers', 'Firebase Codelabs'] },
-  'UI/UX Designer': { tech: 'Figma, user research, wireframes, prototypes, accessibility', platforms: ['Figma Learn', 'Google UX Design', 'Interaction Design Foundation'] },
+  'Frontend Developer': { tech: 'HTML, CSS, JavaScript, React, TypeScript, accessibility', platforms: ['freeCodeCamp', 'The Odin Project', 'Frontend Mentor', 'Vercel (vercel.com)', 'GitHub (github.com)'] },
+  'Backend Developer': { tech: 'Node.js, Express, REST APIs, PostgreSQL, Redis, Docker', platforms: ['MDN Web Docs', 'Docker (docker.com)', 'Postman Academy', 'AWS Builder (aws.amazon.com)'] },
+  'Java Engineer': { tech: 'Java, OOP, Collections, Spring Boot, SQL, JUnit', platforms: ['Spring Academy', 'HackerRank Java', 'AWS EC2', 'GitHub (github.com)'] },
+  'Python Engineer': { tech: 'Python, FastAPI/Django, SQL, testing, Docker', platforms: ['Python Docs', 'Docker (docker.com)', 'AWS Lambda', 'GitHub (github.com)'] },
+  'Cloud Engineer': { tech: 'Linux, networking, AWS/Azure, Docker, Kubernetes, Terraform', platforms: ['AWS Skill Builder (aws.amazon.com)', 'Docker (docker.com)', 'Kubernetes (kubernetes.io)'] },
+  'Full Stack Developer': { tech: 'React, Node.js, APIs, authentication, PostgreSQL, deployment', platforms: ['Firebase (firebase.google.com)', 'Vercel (vercel.com)', 'Docker (docker.com)', 'AWS Builder'] },
+  'DevOps Engineer': { tech: 'Linux, Bash, Git, Docker, CI/CD, Kubernetes, Terraform', platforms: ['Docker (docker.com)', 'AWS Skill Builder', 'GitHub Actions'] },
+  'Data Analyst': { tech: 'Excel, SQL, Power BI/Tableau, Python, statistics', platforms: ['Kaggle (kaggle.com)', 'Microsoft Learn', 'AWS Builder (aws.amazon.com)'] },
+  'Data Scientist': { tech: 'Python, SQL, statistics, Pandas, scikit-learn, visualization', platforms: ['Kaggle (kaggle.com)', 'AWS SageMaker', 'Google Colab'] },
+  'Machine Learning Engineer': { tech: 'Python, statistics, scikit-learn, PyTorch/TensorFlow, MLOps', platforms: ['AWS DeepRacer', 'Kaggle (kaggle.com)', 'Docker (docker.com)'] },
+  'Cybersecurity Analyst': { tech: 'Networking, Linux, Python, OWASP, SIEM, incident response', platforms: ['TryHackMe', 'OWASP (owasp.org)', 'AWS Security'] },
+  'QA Automation Engineer': { tech: 'Testing fundamentals, Selenium/Playwright, APIs, CI/CD, SQL', platforms: ['Selenium (selenium.dev)', 'Playwright', 'Docker (docker.com)'] },
+  'Mobile App Developer': { tech: 'Dart/Flutter or Kotlin, state management, APIs, testing', platforms: ['Firebase (firebase.google.com)', 'Flutter Docs', 'AWS Amplify'] },
+  'UI/UX Designer': { tech: 'Figma, user research, wireframes, prototypes, accessibility', platforms: ['Figma (figma.com)', 'Google UX Design', 'Firebase (for A/B testing)'] },
 };
 
 function RolesPage() {

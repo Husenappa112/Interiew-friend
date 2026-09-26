@@ -1,62 +1,46 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const yearPlans = [
-  {
-    year: '1st Year',
-    focus: 'Programming foundations, problem-solving, Git/GitHub, professional profile, and career awareness',
-    details: ['Choose one: C, C++, Java, or Python', 'Learn HTML and CSS fundamentals', 'Practice basic logic and flowcharts', 'Create GitHub and LinkedIn profiles'],
-    links: [
-      { label: 'freeCodeCamp – programming courses', url: 'https://www.youtube.com/@freecodecamp' },
-      { label: 'GitHub Skills – hands-on Git', url: 'https://skills.github.com/' },
-      { label: 'CS50 – free computer science course', url: 'https://cs50.harvard.edu/x/' },
-      { label: 'Create a GitHub account', url: 'https://github.com/signup' },
-      { label: 'Create a LinkedIn profile', url: 'https://www.linkedin.com/signup' },
-    ],
-  },
-  {
-    year: '2nd Year',
-    focus: 'DSA, web development, databases, GitHub projects, internships, and open-source preparation',
-    details: ['Master arrays, strings, recursion, trees', 'Learn HTML/CSS/JS and React', 'Build one full-stack project', 'Start internship applications'],
-    links: [
-      { label: 'NeetCode – DSA roadmap', url: 'https://neetcode.io/roadmap' },
-      { label: 'The Odin Project – web development', url: 'https://www.theodinproject.com/' },
-      { label: 'GitHub Student Developer Pack', url: 'https://education.github.com/pack' },
-    ],
-  },
-  {
-    year: '3rd Year',
-    focus: 'Core CS, role specialization, AI literacy, resume building, competitive programming, research, and open source',
-    details: ['Prepare for DSA interviews', 'Learn DBMS and OS basics', 'Contribute to open source', 'Improve resume and LinkedIn'],
-    links: [
-      { label: 'Google Summer of Code', url: 'https://summerofcode.withgoogle.com/' },
-      { label: 'Roadmap.sh – role roadmaps', url: 'https://roadmap.sh/' },
-      { label: 'Microsoft Learn – free training', url: 'https://learn.microsoft.com/training/' },
-      { label: 'AICTE internship portal', url: 'https://internship.aicte-india.org/' },
-      { label: 'Cisco Networking Academy', url: 'https://www.netacad.com/' },
-    ],
-  },
-  {
-    year: '4th Year',
-    focus: 'Placements, role-specific interviews, communication, AI-aware engineering skills, portfolio, and company targeting',
-    details: ['Practice mock interviews', 'Prepare project explanations', 'Study company-specific preparation', 'Apply to target roles'],
-    links: [
-      { label: 'IndiaBix – aptitude practice', url: 'https://www.indiabix.com/logical-reasoning/analogy/' },
-      { label: 'LeetCode – interview practice', url: 'https://leetcode.com/' },
-      { label: 'Naukri – jobs and internships', url: 'https://www.naukri.com/' },
-    ],
-  },
-];
+const trackPlans = {
+  'Software Engineering': [
+    { year: '1st Year', focus: 'CS Fundamentals & Logic', details: ['Learn C or C++ basics', 'Understand loops, arrays, pointers', 'Build basic CLI tools', 'Create GitHub profile'], links: [{ label: 'CS50', url: 'https://cs50.harvard.edu/' }] },
+    { year: '2nd Year', focus: 'DSA & Web Basics', details: ['Master Trees, Graphs, Recursion', 'Learn HTML, CSS, JavaScript', 'Build a simple web portfolio', 'Start competitive programming'], links: [{ label: 'NeetCode', url: 'https://neetcode.io/' }] },
+    { year: '3rd Year', focus: 'Frameworks & Internships', details: ['Learn React or Node.js', 'Build a full-stack project', 'Study DBMS & OS', 'Apply for summer internships'], links: [{ label: 'The Odin Project', url: 'https://www.theodinproject.com/' }] },
+    { year: '4th Year', focus: 'Placements & System Design', details: ['Practice mock interviews', 'Learn basic System Design', 'Apply for full-time roles', 'Contribute to open source'], links: [{ label: 'LeetCode', url: 'https://leetcode.com/' }] }
+  ],
+  'Data Science': [
+    { year: '1st Year', focus: 'Math & Python Foundations', details: ['Learn Python basics', 'Study Statistics and Probability', 'Learn Linear Algebra', 'Use Jupyter Notebooks'], links: [{ label: 'Kaggle Learn', url: 'https://www.kaggle.com/learn' }] },
+    { year: '2nd Year', focus: 'Data Wrangling & EDA', details: ['Master Pandas & NumPy', 'Learn Data Visualization (Matplotlib)', 'SQL & Database Basics', 'Analyze public datasets'], links: [{ label: 'DataCamp Free', url: 'https://www.datacamp.com/' }] },
+    { year: '3rd Year', focus: 'Machine Learning Core', details: ['Learn Scikit-Learn', 'Understand Regression & Classification', 'Build 2 ML models', 'Apply for Data Analyst internships'], links: [{ label: 'Google ML Course', url: 'https://developers.google.com/machine-learning' }] },
+    { year: '4th Year', focus: 'Deep Learning & MLOps', details: ['Learn PyTorch or TensorFlow', 'Basic NLP or Computer Vision', 'Deploy models with FastAPI/Docker', 'Apply for Data Scientist roles'], links: [{ label: 'DeepLearning.AI', url: 'https://www.deeplearning.ai/' }] }
+  ]
+};
 
 function RoadmapPage() {
+  const [track, setTrack] = useState('Software Engineering');
+  const plans = trackPlans[track];
+
   return (
     <div className="page-content">
       <div className="section-heading">
         <p className="eyebrow">Roadmap</p>
         <h2>Your guided path from student to hired professional</h2>
       </div>
+      
+      <div className="track-selector" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
+        {Object.keys(trackPlans).map(t => (
+          <button 
+            key={t} 
+            onClick={() => setTrack(t)}
+            className={track === t ? 'primary-btn' : 'secondary-btn'}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
 
       <div className="year-grid roadmap-grid">
-        {yearPlans.map((plan) => (
+        {plans.map((plan) => (
           <div className="glass-card year-card" key={plan.year}>
             <h3>{plan.year}</h3>
             <p>{plan.focus}</p>
@@ -71,13 +55,12 @@ function RoadmapPage() {
       </div>
 
       <div className="glass-card panel-card roadmap-panel">
-        <h3>Weekly plan</h3>
+        <h3>Weekly plan for {track}</h3>
         <ul>
-          <li>Practice 3 DSA questions</li>
+          <li>Practice 3 domain-specific questions</li>
           <li>Build one project or improve a portfolio repository</li>
           <li>Apply to one internship or open source opportunity</li>
           <li>Use AI feedback to improve communication and resume</li>
-          <li>Review one company-specific interview topic every week</li>
         </ul>
         <Link className="primary-btn inline-btn" to="/practice">Start practice</Link>
       </div>

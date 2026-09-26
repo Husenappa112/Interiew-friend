@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 
 const practiceModes = [
-  { title: 'Aptitude test', description: 'Percentages, time/work, probability, profit/loss, and speed practice.', action: 'Start aptitude test' },
-  { title: 'Logical reasoning', description: 'Analogy, coding-decoding, directions, series, and puzzles.', url: 'https://www.indiabix.com/logical-reasoning/' },
+  { title: 'Aptitude test', description: 'Percentages, time/work, probability, profit/loss, and speed practice.', action: 'Start aptitude test', modeId: 'aptitude' },
+  { title: 'Logical reasoning', description: 'Analogy, coding-decoding, directions, series, and puzzles.', action: 'Study Analogy', modeId: 'analogy' },
   { title: 'DSA practice', description: 'Structured coding interview questions by difficulty and topic.', url: 'https://leetcode.com/problemset/' },
   { title: 'HackerRank', description: 'Language-specific problems, certificates, and programming practice.', url: 'https://www.hackerrank.com/domains' },
   { title: 'CodeChef', description: 'Competitive programming contests and beginner practice.', url: 'https://www.codechef.com/practice' },
@@ -21,6 +21,73 @@ const questions = [
   { text: 'Find the simple interest on Rs. 2,000 at 5% per annum for 3 years.', options: ['Rs. 250', 'Rs. 300', 'Rs. 350', 'Rs. 400'], answer: 1, topic: 'Interest' },
   { text: 'A person walks 10 metres north, then 10 metres east, then 10 metres south. How far is he from the starting point?', options: ['0 metres', '10 metres', '20 metres', '30 metres'], answer: 1, topic: 'Direction Sense' },
 ];
+
+const analogyQuestions = [
+  { id: 1, text: 'Oasis : Sand :: Island : ?', options: ['River', 'Sea', 'Water', 'Waves'], answer: 2, explanation: 'An oasis is a water body surrounded by sand (desert). Similarly, an island is a piece of land surrounded by water.' },
+  { id: 2, text: 'Cup : Lip :: Bird : ?', options: ['Bush', 'Grass', 'Forest', 'Beak'], answer: 3, explanation: 'Cup is used to drink something with the help of lips. Similarly, birds collect grass with the help of a beak to make their nest.' },
+  { id: 3, text: 'Flow : River :: Stagnant : ?', options: ['Rain', 'Stream', 'Pool', 'Canal'], answer: 2, explanation: 'Water of a river flows, similarly water of a pool is stagnant.' },
+  { id: 4, text: 'Paw : Cat :: Hoof : ?', options: ['Lamb', 'Elephant', 'Lion', 'Horse'], answer: 3, explanation: 'Cat has a paw, similarly Horse has a hoof.' },
+  { id: 5, text: 'Safe : Secure :: Protect : ?', options: ['Conserve', 'Sure', 'Guard', 'Lock'], answer: 2, explanation: 'Safe and Secure have similar meanings. Similarly, Protect and Guard have similar meanings.' },
+];
+
+function AnalogyPractice({ onBack }) {
+  const [showAnswer, setShowAnswer] = useState({});
+  const [showWorkspace, setShowWorkspace] = useState({});
+
+  const toggleAnswer = (id) => setShowAnswer(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleWorkspace = (id) => setShowWorkspace(prev => ({ ...prev, [id]: !prev[id] }));
+
+  return (
+    <div className="test-page analogy-page">
+      <div className="test-topline">
+        <button onClick={onBack} className="back-link">← Back to Practice Hub</button>
+        <span>Logical Reasoning / Analogy</span>
+      </div>
+      <header className="test-header">
+        <div>
+          <p className="test-kicker">Study Mode</p>
+          <h1>Analogy Questions and Answers</h1>
+          <p>Read the given questions, solve them, and click "View Answer" to verify.</p>
+        </div>
+      </header>
+
+      <div className="analogy-list">
+        {analogyQuestions.map((q, index) => (
+          <div key={q.id} className="analogy-card glass-card">
+            <div className="analogy-question">
+              <strong>{index + 1}.</strong> <span>{q.text}</span>
+            </div>
+            <div className="analogy-options">
+              {q.options.map((opt, i) => (
+                <div key={i} className="analogy-option">
+                  <span className="opt-letter">{String.fromCharCode(65 + i)}.</span> {opt}
+                </div>
+              ))}
+            </div>
+            <div className="analogy-actions">
+              <button className="test-muted" onClick={() => toggleAnswer(q.id)}>View Answer</button>
+              <button className="test-muted" onClick={() => toggleWorkspace(q.id)}>Workspace</button>
+              <button className="test-muted">Report</button>
+            </div>
+            
+            {showAnswer[q.id] && (
+              <div className="analogy-answer-panel">
+                <p><strong>Answer:</strong> Option {String.fromCharCode(65 + q.answer)}</p>
+                <p><strong>Explanation:</strong><br/>{q.explanation}</p>
+              </div>
+            )}
+            
+            {showWorkspace[q.id] && (
+              <div className="analogy-workspace">
+                <textarea placeholder="Use this space for rough work..." rows={4}></textarea>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const TEST_SECONDS = 15 * 60;
 
@@ -58,9 +125,13 @@ function PracticePage() {
 
   if (!selectedMode) return <div className="page-content">
     <div className="section-heading"><p className="eyebrow">Practice hub</p><h2>Choose exactly what you want to improve</h2><p>Start an in-app aptitude test or use a trusted platform for reasoning, DSA, competitive programming, and coding.</p></div>
-    <div className="practice-choice-grid">{practiceModes.map((mode) => <article className="glass-card practice-choice" key={mode.title}><h3>{mode.title}</h3><p>{mode.description}</p>{mode.action ? <button className="primary-btn" onClick={() => setSelectedMode('aptitude')}>{mode.action}</button> : <a className="secondary-btn" href={mode.url} target="_blank" rel="noreferrer">Open platform ↗</a>}</article>)}</div>
+    <div className="practice-choice-grid">{practiceModes.map((mode) => <article className="glass-card practice-choice" key={mode.title}><h3>{mode.title}</h3><p>{mode.description}</p>{mode.action ? <button className="primary-btn" onClick={() => setSelectedMode(mode.modeId || 'aptitude')}>{mode.action}</button> : <a className="secondary-btn" href={mode.url} target="_blank" rel="noreferrer">Open platform ↗</a>}</article>)}</div>
     <section className="glass-card learning-strip"><h3>Before you start</h3><p>Choose a topic, solve a small set without looking at solutions, review mistakes, then repeat with a timer. Your skill grows from feedback, not random question counts.</p></section>
   </div>;
+
+  if (selectedMode === 'analogy') {
+    return <AnalogyPractice onBack={() => setSelectedMode(null)} />;
+  }
 
   if (submitted) {
     const percentage = Math.round((score / questions.length) * 100);

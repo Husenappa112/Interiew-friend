@@ -10,6 +10,7 @@ import OpportunitiesPage from './pages/OpportunitiesPage';
 import RoadmapPage from './pages/RoadmapPage';
 import CommunityPage from './pages/CommunityPage';
 import AIAssistantPage from './pages/AIAssistantPage';
+import StartupPage from './pages/StartupPage';
 
 function RequireAuth({ children }) {
   const location = useLocation();
@@ -22,7 +23,7 @@ function App() {
       <div className="app-shell">
         <header className="topbar">
           <Link className="brand" to="/">
-            <span className="brand-mark" aria-label="M logo">M</span>
+            <img src="/logo.jpg" className="brand-logo-img" alt="Interview Friend Logo" />
             <span>
               <strong>M AI Career Platform</strong>
               <small>One platform for learning, practicing, building, and getting hired.</small>
@@ -35,6 +36,7 @@ function App() {
             <NavLink to="/opportunities">Opportunities</NavLink>
             <NavLink to="/roadmap">Roadmap</NavLink>
             <NavLink to="/community">Community</NavLink>
+            <NavLink to="/startup">Startup</NavLink>
             <NavLink to="/ai-advisor">AI</NavLink>
           </nav>
 
@@ -55,6 +57,7 @@ function App() {
             <Route path="/opportunities" element={<RequireAuth><OpportunitiesPage /></RequireAuth>} />
             <Route path="/roadmap" element={<RequireAuth><RoadmapPage /></RequireAuth>} />
             <Route path="/community" element={<RequireAuth><CommunityPage /></RequireAuth>} />
+            <Route path="/startup" element={<RequireAuth><StartupPage /></RequireAuth>} />
             <Route path="/ai-advisor" element={<RequireAuth><AIAssistantPage /></RequireAuth>} />
           </Routes>
         </main>
