@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-dotenv.config();
+dotenv.config({ override: true });
 console.log("Step 1: env loaded");
 
 const app = require("./app");

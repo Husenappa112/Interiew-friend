@@ -6,6 +6,12 @@ const posts = [
   { title: 'Resume tips shared by seniors', description: 'Improvements that helped raise ATS scores.' },
 ];
 
+const communities = [
+  { title: 'Career mentor WhatsApp', text: 'Ask about internships, resumes, and placements.', url: 'https://wa.me/919686552895?text=Hi%20I%20need%20career%20guidance%20from%20Interview%20Friend.' },
+  { title: 'Study accountability group', text: 'Find peers for daily DSA, aptitude, and project goals.', url: 'https://wa.me/919686552895?text=Hi%20please%20add%20me%20to%20the%20Interview%20Friend%20study%20community.' },
+  { title: 'Project and open-source help', text: 'Share a GitHub issue or project idea and get support.', url: 'https://wa.me/919686552895?text=Hi%20I%20need%20help%20with%20a%20project%20or%20open-source%20contribution.' },
+];
+
 function CommunityPage() {
   return (
     <div className="page-content">
@@ -21,6 +27,14 @@ function CommunityPage() {
             <p>{post.description}</p>
           </div>
         ))}
+      </div>
+
+      <div className="section-heading community-heading">
+        <p className="eyebrow">Connect with people</p>
+        <h3>Mentor and peer communities</h3>
+      </div>
+      <div className="community-grid">
+        {communities.map((community) => <a className="glass-card community-card community-link" href={community.url} target="_blank" rel="noreferrer" key={community.title}><h3>{community.title}</h3><p>{community.text}</p><span>Open WhatsApp ↗</span></a>)}
       </div>
 
       <div className="glass-card panel-card community-panel">

@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, NavLink } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, NavLink, Navigate, useLocation } from 'react-router-dom';
 import './App.css';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -10,6 +10,11 @@ import OpportunitiesPage from './pages/OpportunitiesPage';
 import RoadmapPage from './pages/RoadmapPage';
 import CommunityPage from './pages/CommunityPage';
 import AIAssistantPage from './pages/AIAssistantPage';
+
+function RequireAuth({ children }) {
+  const location = useLocation();
+  return localStorage.getItem('m-ai-token') ? children : <Navigate to="/login" replace state={{ from: location.pathname }} />;
+}
 
 function App() {
   return (
@@ -44,13 +49,13 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/practice" element={<PracticePage />} />
-            <Route path="/roles" element={<RolesPage />} />
-            <Route path="/opportunities" element={<OpportunitiesPage />} />
-            <Route path="/roadmap" element={<RoadmapPage />} />
-            <Route path="/community" element={<CommunityPage />} />
-            <Route path="/ai-advisor" element={<AIAssistantPage />} />
+            <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
+            <Route path="/practice" element={<RequireAuth><PracticePage /></RequireAuth>} />
+            <Route path="/roles" element={<RequireAuth><RolesPage /></RequireAuth>} />
+            <Route path="/opportunities" element={<RequireAuth><OpportunitiesPage /></RequireAuth>} />
+            <Route path="/roadmap" element={<RequireAuth><RoadmapPage /></RequireAuth>} />
+            <Route path="/community" element={<RequireAuth><CommunityPage /></RequireAuth>} />
+            <Route path="/ai-advisor" element={<RequireAuth><AIAssistantPage /></RequireAuth>} />
           </Routes>
         </main>
 

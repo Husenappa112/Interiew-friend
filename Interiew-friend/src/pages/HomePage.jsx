@@ -1,296 +1,38 @@
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { fetchOverview } from '../service/api';
-import AIChatWidget from '../assets/components/AIChatWidget';
 
-const metrics = [
-  { label: 'Roles', value: '100+' },
-  { label: 'Questions', value: '5k+' },
-  { label: 'Videos', value: '1k+' },
-  { label: 'AI Feedback', value: '24/7' },
+const pillars = [
+  ['Discover', 'Internships, jobs, hackathons, scholarships, conferences, and open-source programmes with direct application links.'],
+  ['Build skills', 'Role-specific roadmaps, free AICTE, Google, Cisco, Microsoft, and community learning resources.'],
+  ['Practice', 'Choose aptitude, reasoning, DSA, coding platforms, mock interviews, or online compilers—on your own path.'],
+  ['Grow together', 'Connect with seniors, mentors, and study partners for accountability and career support.'],
 ];
 
-const features = [
-  { title: 'AI Mock Interview', description: 'Practice with a voice-first interviewer that adapts to your pace and gives actionable feedback.' },
-  { title: 'Resume Analyzer', description: 'Upload your resume and discover ATS gaps, missing skills, and stronger positioning for roles.' },
-  { title: 'Career Roadmaps', description: 'Generate year-wise learning plans for internships, placements, open source, and beyond.' },
-  { title: 'Opportunity Hub', description: 'Filter internships, jobs, hackathons, scholarships, and open-source programs in one dashboard.' },
-  { title: 'Learning Hub', description: 'Access curated YouTube playlists, company prep notes, coding questions, and interview videos.' },
-  { title: 'Progress Dashboard', description: 'Track streaks, weekly goals, weak skills, and your growth over time with one view.' },
+const yearGuidance = [
+  { year: '1st year', do: 'Learn one programming language, HTML/CSS, Git/GitHub, communication, and create LinkedIn.', avoid: 'Do not chase certificates without building or compare your start to seniors.' },
+  { year: '2nd year', do: 'Learn DSA, DBMS, web or app development, and publish two useful projects.', avoid: 'Do not wait until third year to make GitHub active or start internships.' },
+  { year: '3rd year', do: 'Choose a role, learn its technology stack, contribute to open source, and refine your resume.', avoid: 'Do not apply everywhere with the same resume or skip CS fundamentals.' },
+  { year: '4th year', do: 'Practice interview communication, company patterns, aptitude/DSA, and application tracking.', avoid: 'Do not stop building after placements start or rely only on campus drives.' },
 ];
 
-const ecosystemItems = [
-  { title: 'AI Career Advisor', description: 'Ask anything about roles, company prep, resources, projects, and interview strategy.' },
-  { title: 'Global Opportunities', description: 'Search internships, jobs, hackathons, scholarships, and research programs by country and skills.' },
-  { title: 'GitHub & LinkedIn Analyzer', description: 'Turn your profile into a stronger portfolio with AI feedback on repositories and personal branding.' },
-  { title: 'Year-wise Guidance', description: 'Get a personalized plan for 1st year through graduates and working professionals.' },
-];
-
-const companies = ['Google', 'Amazon', 'Microsoft', 'Adobe', 'Oracle', 'Infosys', 'TCS', 'Flipkart'];
-
-const subjectChannels = [
-  { title: 'DSA & Problem Solving', channels: ['Abdul Bari', 'CodeChef', 'NeetCode'] },
-  { title: 'Web Development', channels: ['Traversy Media', 'freeCodeCamp', 'The Net Ninja'] },
-  { title: 'DBMS & System Design', channels: ['Gaurav Sen', 'Harkirat Singh', 'System Design School'] },
-  { title: 'Cloud & DevOps', channels: ['Tech With Nana', 'KodeKloud', 'AWS Training'] },
-  { title: 'Python & AI', channels: ['Krish Naik', 'freeCodeCamp', 'Coding Ninjas'] },
-  { title: 'Java & Backend', channels: ['Java Brains', 'Code With Harry', 'Hitesh Choudhary'] },
-];
-
-const locationContent = {
-  India: [
-    'College placement prep for TCS, Infosys, Wipro, and Capgemini',
-    'Internship and hackathon opportunities for Tier-1 and Tier-2 city students',
-    'Regional tech communities and coding bootcamp events',
-  ],
-  USA: [
-    'Summer internship and internship conversion pathways for US students',
-    'Campus recruiting, resume review, and portfolio strategies',
-    'Remote-first software roles and startup-focused project building',
-  ],
-  Europe: [
-    'EU internship visas, research programs, and academic-focused roles',
-    'Remote-first technical roles and global startup hiring trends',
-    'Study and work opportunities aligned with European job markets',
-  ],
-  Default: [
-    'Career roadmap for your target country and remote opportunities',
-    'Portfolio projects and AI interview prep customized to your market',
-    'Community meetups, scholarships, and open-source learning tracks',
-  ],
-};
-
-const fallbackRoles = [
-  { title: 'Frontend Engineer', slug: 'frontend-engineer', overview: 'Build accessible, high-converting interfaces for real-world products and internal tools.', skills: ['React', 'TypeScript', 'UX Systems'] },
-  { title: 'Backend Engineer', slug: 'backend-engineer', overview: 'Design APIs, secure systems, and scalable services that support real user traffic.', skills: ['Node.js', 'APIs', 'System Design'] },
-  { title: 'Data Engineer', slug: 'data-engineer', overview: 'Build data pipelines and analytics workflows used by product and business teams.', skills: ['SQL', 'Python', 'ETL'] },
-  { title: 'Cloud Engineer', slug: 'cloud-engineer', overview: 'Deploy resilient systems, optimize costs, and automate infrastructure on modern cloud stacks.', skills: ['AWS', 'Docker', 'Terraform'] },
-  { title: 'Product Analyst', slug: 'product-analyst', overview: 'Turn insights into actions with experimentation, product analytics, and business reasoning.', skills: ['SQL', 'Metrics', 'Experimentation'] },
-];
-
-const fallbackOpportunities = [
-  { title: 'Google Summer of Code', type: 'Open Source' },
-  { title: 'Microsoft Learn Internship', type: 'Internship' },
-  { title: 'HackOn India', type: 'Hackathon' },
-  { title: 'Amazon Future Engineer', type: 'Scholarship' },
-  { title: 'Infosys Springboard', type: 'Learning' },
-];
+const learningPartners = ['AICTE Internship Portal', 'Google Cloud Skills Boost', 'Cisco Networking Academy', 'Microsoft Learn', 'AWS Skill Builder', 'IBM SkillsBuild', 'freeCodeCamp', 'Coursera financial aid', 'Udemy free courses'];
+const workspaceCategories = ['Internships', 'Jobs', 'Hackathons', 'Open source', 'Scholarships', 'Competitions', 'Practice tests', 'Role roadmaps', 'Mentor community'];
 
 function HomePage() {
-  const [roles, setRoles] = useState([]);
-  const [opportunities, setOpportunities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [location, setLocation] = useState('India');
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const data = await fetchOverview();
-        setRoles(data.roles || []);
-        setOpportunities(data.opportunities || []);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
-
-    const savedLocation = localStorage.getItem('m-ai-location');
-    const browserLocale = navigator.language || 'en-IN';
-
-    if (savedLocation) {
-      setLocation(savedLocation);
-      return;
-    }
-
-    if (browserLocale.toLowerCase().includes('in')) {
-      setLocation('India');
-    } else if (browserLocale.toLowerCase().includes('us') || browserLocale.toLowerCase().includes('en-us')) {
-      setLocation('USA');
-    } else if (browserLocale.toLowerCase().includes('fr') || browserLocale.toLowerCase().includes('de') || browserLocale.toLowerCase().includes('uk')) {
-      setLocation('Europe');
-    } else {
-      setLocation('Default');
-    }
-  }, []);
-
-  const displayRoles = roles.length ? roles : fallbackRoles;
-  const displayOpportunities = opportunities.length ? opportunities : fallbackOpportunities;
-  const currentLocationContent = locationContent[location] || locationContent.Default;
-
-  return (
-    <div className="page-content">
-      <AIChatWidget />
-      <section className="hero-section">
-        <div className="hero-copy">
-          <p className="eyebrow">AI Career OS for students and freshers</p>
-          <h1>Become interview-ready with an AI mentor that thinks several steps ahead.</h1>
-          <p className="hero-text">Practice interviews, build roadmaps, discover opportunities, and track your progress from one platform.</p>
-          <div className="hero-actions">
-            <Link className="primary-btn" to="/practice">Start Interview</Link>
-            <Link className="secondary-btn" to="/opportunities">Explore Opportunities</Link>
-          </div>
-          <div className="metric-grid">
-            {metrics.map((metric) => (
-              <div className="metric-card" key={metric.label}>
-                <strong>{metric.value}</strong>
-                <span>{metric.label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="hero-visual">
-          <div className="orb orb-one" />
-          <div className="orb orb-two" />
-          <div className="ai-card">
-            <div className="ai-card-head">
-              <span className="dot" />
-              <span>AI Coach • Live</span>
-            </div>
-            <div className="ai-chat">
-              <p className="bubble user">How do I prepare for Google Cloud?</p>
-              <p className="bubble ai">Roadmap • Projects • Resume tips • Interview practice</p>
-            </div>
-            <div className="ai-card-foot">Ask: “Show me cloud internships”</div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="roles">
-        <div className="section-heading">
-          <p className="eyebrow">Popular roles</p>
-          <h3>Choose a role and start building your edge.</h3>
-        </div>
-        <div className="role-grid">
-          {loading ? (
-            <div className="glass-card role-card"><h4>Loading roles...</h4></div>
-          ) : displayRoles.map((role) => (
-            <article className="glass-card role-card" key={role.slug || role.title}>
-              <h4>{role.title}</h4>
-              <p>{role.overview}</p>
-              <span>{role.skills?.join(' • ')}</span>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section" id="practice">
-        <div className="section-heading">
-          <p className="eyebrow">Core features</p>
-          <h3>An AI operating system for your career journey.</h3>
-        </div>
-        <div className="feature-grid">
-          {features.map((feature) => (
-            <article className="glass-card feature-card" key={feature.title}>
-              <h4>{feature.title}</h4>
-              <p>{feature.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section split-section" id="opportunities">
-        <div className="glass-card panel-card">
-          <p className="eyebrow">Opportunities hub</p>
-          <h3>Find internships, hackathons, scholarships, and open-source programs in one place.</h3>
-          <div className="opportunity-list">
-            {displayOpportunities.map((item) => (
-              <div className="opportunity-item" key={item.title}>
-                <strong>{item.title}</strong>
-                <span>{item.type}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="glass-card panel-card">
-          <p className="eyebrow">Smart roadmap</p>
-          <h3>From first-year fundamentals to placement readiness.</h3>
-          <div className="dashboard-list">
-            {['Learn programming fundamentals', 'Build projects and GitHub portfolio', 'Practice DSA and system design', 'Apply to internships and open source', 'Ace interviews with AI feedback'].map((step, index) => (
-              <div className="dashboard-item" key={step}>
-                <span>{index + 1}</span>
-                <p>{step}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section" id="ecosystem">
-        <div className="section-heading">
-          <p className="eyebrow">AI ecosystem</p>
-          <h3>Everything you need to grow from student to hired professional.</h3>
-        </div>
-        <div className="ecosystem-grid">
-          {ecosystemItems.map((item) => (
-            <article className="glass-card ecosystem-card" key={item.title}>
-              <h4>{item.title}</h4>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="section" id="learning">
-        <div className="section-heading">
-          <p className="eyebrow">YouTube learning hub</p>
-          <h3>Role-based channels and subject playlists for every career path.</h3>
-        </div>
-
-        <div className="resource-grid">
-          {subjectChannels.map((subject) => (
-            <div className="glass-card resource-card" key={subject.title}>
-              <h4>{subject.title}</h4>
-              <ul>
-                {subject.channels.map((channel) => <li key={channel}>{channel}</li>)}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section" id="community">
-        <div className="section-heading">
-          <p className="eyebrow">Trusted by ambitious students</p>
-          <h3>Built for the next generation of engineers and builders.</h3>
-        </div>
-
-        <div className="location-panel glass-card">
-          <div>
-            <p className="eyebrow">Regional content</p>
-            <h3>Career resources for {location}</h3>
-          </div>
-          <ul>
-            {currentLocationContent.map((item) => <li key={item}>{item}</li>)}
-          </ul>
-        </div>
-
-        <div className="cta-banner glass-card">
-          <div>
-            <p className="eyebrow">Career momentum</p>
-            <h3>Turn your weekly progress into interview-ready outcomes.</h3>
-          </div>
-          <Link className="primary-btn" to="/dashboard">View my dashboard</Link>
-        </div>
-
-        <div className="company-row">
-          {companies.map((company) => <div className="company-pill" key={company}>{company}</div>)}
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="glass-card developed-card">
-          <p className="eyebrow">Developed by</p>
-          <h3>M AI Career Platform Team</h3>
-          <p>Designed for engineering students and fresh graduates to learn, practice, build, and get hired in one intelligent workspace.</p>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="landing-page">
+    <section className="landing-hero glass-card">
+      <p className="eyebrow">One platform · Student to professional</p>
+      <h1>Find your next opportunity. Build the skills to earn it.</h1>
+      <p>Interview Friend brings role roadmaps, learning platforms, practice, community guidance, open source, internships, and hackathons into one focused workspace for engineering students.</p>
+      <div className="landing-actions"><Link className="primary-btn" to="/signup">Create free account</Link><Link className="secondary-btn" to="/login">Log in</Link></div>
+      <p className="landing-note">Start free. Create an account to access the career workspace.</p>
+    </section>
+    <section className="landing-section"><p className="eyebrow">What you can do</p><h2>Everything needed for a deliberate career journey</h2><div className="feature-grid">{pillars.map(([title, description]) => <article className="glass-card feature-card" key={title}><h3>{title}</h3><p>{description}</p></article>)}</div></section>
+    <section className="landing-section"><p className="eyebrow">Your all-in-one workspace</p><h2>Explore every path after you sign in</h2><div className="workspace-category-grid">{workspaceCategories.map((category) => <Link className="glass-card workspace-category" key={category} to="/login"><strong>{category}</strong><span>Explore →</span></Link>)}</div></section>
+    <section className="landing-section"><p className="eyebrow">Start with the right habits</p><h2>What to do—and what students often ignore</h2><div className="year-advice-grid">{yearGuidance.map((item) => <article className="glass-card year-advice" key={item.year}><h3>{item.year}</h3><p><strong>Do:</strong> {item.do}</p><p><strong>Do not ignore:</strong> {item.avoid}</p></article>)}</div></section>
+    <section className="landing-section landing-platforms glass-card"><p className="eyebrow">Free and low-cost learning</p><h2>One workspace, many trusted platforms</h2><p>Use our role guides to decide what to learn, then open the right platform instead of searching randomly.</p><div>{learningPartners.map((partner) => <span key={partner}>{partner}</span>)}</div></section>
+    <section className="landing-section landing-journey glass-card"><div><p className="eyebrow">Designed for every year</p><h2>Foundations → projects → opportunities → placement readiness</h2><p>Begin with programming and your professional profile in first year. Then develop projects, communication, interview skills, and a public portfolio as your goals mature.</p></div><Link className="primary-btn" to="/signup">Start my journey</Link></section>
+    <section className="landing-credit"><p>Built by</p><strong>Husenappa H.</strong><span>Interview Friend · AI Career Platform</span></section>
+  </div>;
 }
 
 export default HomePage;

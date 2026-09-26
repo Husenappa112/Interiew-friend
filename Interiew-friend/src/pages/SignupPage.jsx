@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { apiRequest } from '../service/api';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -15,21 +14,14 @@ function SignupPage() {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+      const data = await apiRequest('/auth/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: form.name.trim(),
           email: form.email.trim(),
           password: form.password,
         }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Account creation failed');
-      }
 
       localStorage.setItem('m-ai-user', JSON.stringify(data.user));
       localStorage.setItem('m-ai-token', data.token);

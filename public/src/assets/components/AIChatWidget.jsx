@@ -29,7 +29,7 @@ const AIChatWidget = () => {
       if (!response.ok) throw new Error(data.message || "Chat request failed");
       setMessages((items) => [...items, { role: "model", text: data.reply }]);
     } catch (error) {
-      setMessages((items) => [...items, { role: "model", text: error.message }]);
+      setMessages((items) => [...items, { role: "model", text: error.message || "Gemma is temporarily unavailable." }]);
     } finally {
       setLoading(false);
     }

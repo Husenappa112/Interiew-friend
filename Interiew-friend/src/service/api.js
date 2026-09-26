@@ -1,25 +1,30 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+// In development Vite forwards /api requests to the Express server. Deployments
+// can override this with VITE_API_URL (for example, https://api.example.com/api).
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
+export async function apiRequest(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+    ...options,
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok || data.success === false) {
+    throw new Error(data.message || 'The server could not complete your request.');
+  }
+
+  return data;
+}
 
 export async function fetchOverview() {
-  const response = await fetch(`${API_BASE_URL}/content/overview`);
-  if (!response.ok) {
-    throw new Error('Failed to load platform overview');
-  }
-  return response.json();
+  return apiRequest('/content/overview');
 }
 
 export async function fetchRoles() {
-  const response = await fetch(`${API_BASE_URL}/content/roles`);
-  if (!response.ok) {
-    throw new Error('Failed to load roles');
-  }
-  return response.json();
+  return apiRequest('/content/roles');
 }
 
 export async function fetchOpportunities() {
-  const response = await fetch(`${API_BASE_URL}/content/opportunities`);
-  if (!response.ok) {
-    throw new Error('Failed to load opportunities');
-  }
-  return response.json();
+  return apiRequest('/content/opportunities');
 }

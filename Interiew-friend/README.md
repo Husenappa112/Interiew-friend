@@ -15,9 +15,19 @@ npm install
 npm start
 ```
 
-The frontend runs on `http://localhost:5173` and the API on `http://localhost:5001`.
+The API stores accounts in PostgreSQL through Prisma. Before the first run,
+create the database named in `backened/.env` and apply the schema:
 
-Set `GEMINI_API_KEY` in `backened/.env` to enable the Gemma advisor. The default model is `gemma-3-27b-it`; override it with `GEMMA_MODEL` when needed.
+```bash
+cd backened
+npx prisma db push
+```
+
+The frontend runs on `http://localhost:5173` and the API on `http://localhost:5001`.
+Vite forwards `/api` calls to that backend locally, so login and signup use the
+same configured API rather than a hard-coded, mismatched port.
+
+Copy `backened/.env.example` to `backened/.env`, then set `GEMINI_API_KEY` to a real key from Google AI Studio. Do not use the placeholder value. The default model is `gemma-3-27b-it`; override it with `GEMMA_MODEL` when needed. Restart the backend after changing `.env`.
 
 ## Deploy
 

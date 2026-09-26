@@ -8,11 +8,13 @@ const cards = [
 ];
 
 function DashboardPage() {
+  const savedUser = JSON.parse(localStorage.getItem('m-ai-user') || 'null');
   return (
     <div className="page-content">
       <div className="section-heading">
         <p className="eyebrow">Dashboard</p>
-        <h2>Your AI career command center</h2>
+        <h2>{savedUser?.name ? `Welcome back, ${savedUser.name}` : 'Your AI career command center'}</h2>
+        {savedUser?.email && <p className="dashboard-account">Signed in as {savedUser.email}</p>}
       </div>
 
       <div className="metric-grid dashboard-grid">

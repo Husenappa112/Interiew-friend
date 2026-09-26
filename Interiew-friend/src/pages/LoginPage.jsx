@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-
-const API_BASE_URL = 'http://localhost:5000/api';
+import { apiRequest } from '../service/api';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -15,26 +14,19 @@ function LoginPage() {
 
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const data = await apiRequest('/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: form.email.trim(),
           password: form.password,
         }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Login failed');
-      }
-
       localStorage.setItem('m-ai-user', JSON.stringify(data.user));
       localStorage.setItem('m-ai-token', data.token);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Unable to log in. Make sure the API is running.');
     } finally {
       setLoading(false);
     }

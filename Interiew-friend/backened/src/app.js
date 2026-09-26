@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -10,7 +9,17 @@ const errorMiddleware = require("./middlewares/errorMiddleware");
 const app = express();
 
 // Middleware
-app.use(cors());
+// Keep the API usable from the Vite app and a separately deployed frontend
+// without requiring a browser extension or an undeclared npm dependency.
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin) res.setHeader("Access-Control-Allow-Origin", origin);
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

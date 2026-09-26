@@ -1,144 +1,41 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
+import { apiRequest } from '../service/api';
 
-const suggestions = [
-  'How do I prepare for Infosys?',
-  'Show me internship options for cloud',
-  'Help me with my resume',
-  'Create a roadmap for AI',
-  'How do I crack Google interviews?',
+const suggestions = ['Frontend internship roadmap', 'Prepare for Infosys placement', 'Free machine learning training', 'Improve my software resume', 'Aptitude practice plan'];
+
+const rolePlans = [
+  { terms: ['frontend', 'react', 'web developer'], title: 'Frontend developer skill roadmap', skills: ['HTML, CSS, JavaScript fundamentals', 'React, routing, state, and API integration', 'TypeScript, accessibility, performance', 'Build portfolio, e-commerce, or dashboard projects'], apply: ['freeCodeCamp and The Odin Project', 'Frontend internships and open-source UI issues'] },
+  { terms: ['backend', 'node', 'java', 'spring'], title: 'Backend developer skill roadmap', skills: ['Language fundamentals and OOP', 'REST APIs, authentication, validation', 'SQL, PostgreSQL, Redis basics', 'Testing, Docker, and deploy one API'], apply: ['Java Brains / Hitesh Choudhary', 'Backend internships and GitHub API issues'] },
+  { terms: ['python', 'data analyst', 'data science'], title: 'Data and Python skill roadmap', skills: ['Python, SQL, Excel, and statistics', 'Pandas, visualization, and dashboards', 'One end-to-end dataset project', 'Machine learning foundations and GitHub portfolio'], apply: ['Kaggle Learn, Microsoft Learn', 'Data internships and analytics challenges'] },
+  { terms: ['machine learning', 'artificial intelligence', ' ai '], title: 'Machine learning engineer skill roadmap', skills: ['Python, statistics, linear algebra', 'Pandas, scikit-learn, evaluation', 'One deployed ML project', 'MLOps, Docker, APIs, and monitoring basics'], apply: ['Google Cloud Skills Boost', 'Kaggle competitions and AI internships'] },
+  { terms: ['cloud', 'devops', 'aws'], title: 'Cloud and DevOps skill roadmap', skills: ['Linux, networking, and Git', 'Docker and cloud fundamentals', 'CI/CD, Terraform, monitoring', 'Deploy a project with a documented architecture'], apply: ['AWS Skill Builder', 'KodeKloud and cloud internships'] },
+  { terms: ['cyber', 'security'], title: 'Cybersecurity skill roadmap', skills: ['Networking, Linux, and web security basics', 'OWASP Top 10 and secure coding', 'CTF labs and security tooling', 'Document ethical projects and write-ups'], apply: ['TryHackMe and OWASP resources', 'Security internships and CTFs'] },
+  { terms: ['mobile', 'android', 'flutter'], title: 'Mobile developer skill roadmap', skills: ['Dart/Kotlin and mobile UI basics', 'Flutter or Android architecture', 'APIs, local storage, and testing', 'Publish a polished project with screenshots'], apply: ['Flutter and Android free courses', 'Mobile app internships'] },
 ];
 
-function buildResponse(value) {
-  const prompt = value.toLowerCase();
-  const role = prompt.includes('backend') || prompt.includes('developer')
-    ? 'Backend Developer'
-    : prompt.includes('frontend') || prompt.includes('react')
-      ? 'Frontend Developer'
-      : prompt.includes('ai') || prompt.includes('ml')
-        ? 'AI Engineer'
-        : prompt.includes('cloud')
-          ? 'Cloud Engineer'
-          : 'Software Engineer';
-
-  const company = prompt.includes('google') ? 'Google' : prompt.includes('microsoft') ? 'Microsoft' : prompt.includes('infosys') ? 'Infosys' : 'your target company';
-  const focus = prompt.includes('intern') ? 'internship' : prompt.includes('job') ? 'job' : 'career growth';
-
-  return {
-    title: `All-in-one plan for ${role}`,
-    summary: `For ${company}, build a strong ${focus} profile by combining technical depth, project proof, and interview readiness in one focused plan.`,
-    roadmap: [
-      'Master core fundamentals: DSA, OOP, DBMS, OS, and networking basics.',
-      'Build 2 practical projects that show real-world problem solving and deployment skills.',
-      'Create a polished GitHub, LinkedIn, and resume aligned to your target role.',
-      'Practice mock interviews and company-specific questions every week.',
-    ],
-    opportunities: [
-      'Apply to internships and open-source programs like GSoC, Outreachy, and MLH.',
-      'Target companies such as Microsoft, Google, Amazon, Adobe, and Infosys.',
-      'Join hackathons and coding challenges to strengthen your portfolio.',
-    ],
-    resume: [
-      'Use one-page ATS-friendly formatting.',
-      'Highlight measurable impact, tools used, and concrete outcomes.',
-      'Tailor each resume for the exact role and company.',
-    ],
-    interview: [
-      'Prepare 5 strong STAR stories for behavioral rounds.',
-      'Practice coding and system design explanations out loud.',
-      'Review your project walkthroughs and speak with confidence.',
-    ],
-    weekly: [
-      'Practice 3 DSA questions and 1 coding challenge.',
-      'Improve one project and push it to GitHub.',
-      'Apply to 5 relevant opportunities and prepare one follow-up.',
-      'Spend 30 minutes reviewing interview notes and weak areas.',
-    ],
-  };
+function localPlan(prompt) {
+  const query = prompt.toLowerCase();
+  const role = rolePlans.find((item) => item.terms.some((term) => query.includes(term)));
+  if (role) return { source: 'planner', title: role.title, summary: `Build these skills in order, then show them through two projects.`, roadmap: role.skills, opportunities: role.apply, resume: ['Put role-specific projects before generic certificates', 'Add live demo and GitHub links', 'List tools you actually used'], interview: ['Explain architecture and trade-offs in your projects', 'Practice role-specific fundamentals'], weekly: ['Learn one concept', 'Implement one feature', 'Solve role-relevant questions', 'Apply to three matching opportunities'] };
+  const plans = query.includes('resume')
+    ? { title: 'Software resume improvement plan', summary: 'Make your resume recruiter-ready with evidence, not a long skill list.', roadmap: ['Keep the resume to one page', 'Add 2–3 deployed projects with GitHub links', 'Start every project bullet with an action and a measurable result', 'Match the first skills section to the job description'], opportunities: ['Apply on LinkedIn Jobs and Wellfound', 'Use the internship directory for direct company links'], resume: ['Use: action + technology + outcome', 'Place education, skills, projects, experience in this order', 'Remove photo, unrelated certificates, and progress bars'], interview: ['Prepare a two-minute explanation for every project', 'Expect follow-ups on technology choices'], weekly: ['Monday: rewrite project bullets', 'Wednesday: tailor for one role', 'Saturday: apply to three matching roles'] }
+    : query.includes('aptitude') || query.includes('reasoning')
+      ? { title: 'Aptitude and reasoning practice plan', summary: 'Build speed gradually, then add timed practice. Accuracy comes before shortcuts.', roadmap: ['Practice analogy and series for 25 minutes', 'Study one topic: percentages, ratios, time/work, or logical reasoning', 'Review every wrong answer and write the rule', 'Take one timed mixed test weekly'], opportunities: ['IndiaBix topic practice', 'Use the in-app aptitude test to measure progress'], resume: ['Add relevant competition or assessment achievements only'], interview: ['Explain your reasoning aloud before selecting an answer'], weekly: ['Mon–Thu: one topic each day', 'Fri: revise mistakes', 'Sun: a 30-minute mock test'] }
+      : query.includes('ai') || query.includes('machine learning') || query.includes('data')
+        ? { title: 'AI / data career roadmap', summary: 'Start with Python and projects; do not jump straight to complex models.', roadmap: ['Learn Python, NumPy, Pandas, and SQL', 'Study statistics and data visualization', 'Build one data analysis project from a public dataset', 'Learn scikit-learn and deploy a small model'], opportunities: ['Google Cloud Skills Boost', 'Microsoft Learn AI training', 'Kaggle learning and competitions'], resume: ['Link notebooks, dashboards, and a concise project README'], interview: ['Practice SQL, statistics, and explaining model trade-offs'], weekly: ['4 study blocks', '1 notebook or dashboard update', '1 competition or internship application'] }
+        : query.includes('intern') || query.includes('job') || query.includes('placement') || query.includes('infosys')
+          ? { title: 'Internship and placement action plan', summary: 'Focus on proof of skills, regular applications, and company-specific practice.', roadmap: ['Select two target roles and build role-aligned projects', 'Create a clean LinkedIn and GitHub profile', 'Practice DSA, aptitude, CS basics, and HR answers', 'Apply every week through direct portals'], opportunities: ['Microsoft, Google, Amazon, LinkedIn, Wellfound', 'Unstop, Devpost, and MLH challenges'], resume: ['Tailor the summary and top projects to the role', 'Include links that open correctly'], interview: ['Prepare DSA, DBMS, OS, OOP, and project questions', 'Research each company before the interview'], weekly: ['5 applications', '3 DSA questions', '1 mock interview', '1 project improvement'] }
+          : { title: `Personal career plan: ${prompt}`, summary: 'Choose a software role, build proof of your skills, and use the opportunity hub every week.', roadmap: ['Choose a role from Roles', 'Complete one free learning resource', 'Build a portfolio project', 'Practice and apply consistently'], opportunities: ['Browse internships, hackathons, and open-source programs'], resume: ['Keep a one-page, role-focused resume'], interview: ['Practice projects and core CS topics'], weekly: ['Learn', 'Build', 'Practice', 'Apply'] };
+  return { ...plans, source: 'planner' };
 }
 
 function AIAssistantPage() {
   const [prompt, setPrompt] = useState('');
-  const [response, setResponse] = useState({
-    title: 'AI Career Advisor',
-    summary: 'Ask the assistant for internships, company prep, roadmap help, resume feedback, or mock interview guidance and get a complete plan in one response.',
-    roadmap: ['Pick a target role', 'Build a strong project', 'Practice interview questions', 'Apply consistently'],
-    opportunities: ['Explore internships', 'Check hackathons', 'Join open-source programs'],
-    resume: ['Keep it ATS-friendly', 'Highlight results', 'Tailor it to the role'],
-    interview: ['Practice answers', 'Explain projects clearly', 'Review weak areas'],
-    weekly: ['Study daily', 'Apply weekly', 'Review progress'],
-  });
-
-  const answer = useMemo(() => buildResponse(prompt), [prompt]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const trimmedPrompt = prompt.trim();
-
-    if (!trimmedPrompt) {
-      setResponse({
-        title: 'AI Career Advisor',
-        summary: 'Please enter a career question so I can create a personalized plan for you.',
-        roadmap: ['Pick a target role', 'Build a strong project', 'Practice interview questions', 'Apply consistently'],
-        opportunities: ['Explore internships', 'Check hackathons', 'Join open-source programs'],
-        resume: ['Keep it ATS-friendly', 'Highlight results', 'Tailor it to the role'],
-        interview: ['Practice answers', 'Explain projects clearly', 'Review weak areas'],
-        weekly: ['Study daily', 'Apply weekly', 'Review progress'],
-      });
-      return;
-    }
-
-    setResponse(buildResponse(trimmedPrompt));
-  };
-
-  return (
-    <div className="page-content">
-      <div className="section-heading">
-        <p className="eyebrow">AI Advisor</p>
-        <h2>One complete answer for your career journey</h2>
-      </div>
-
-      <div className="glass-card panel-card assistant-panel">
-        <form onSubmit={handleSubmit} className="auth-form">
-          <input type="text" placeholder="Try: frontend internship Google or AI roadmap" value={prompt} onChange={(e) => setPrompt(e.target.value)} />
-          <button className="primary-btn" type="submit">Get full plan</button>
-        </form>
-
-        <div className="prompt-list">
-          {suggestions.map((item) => (
-            <button className="secondary-btn prompt-btn" key={item} onClick={() => setPrompt(item)}>{item}</button>
-          ))}
-        </div>
-
-        <div className="feedback-box">
-          <strong>{response.title}</strong>
-          <p>{response.summary}</p>
-
-          <div className="response-stack">
-            <div className="response-card">
-              <h4>Roadmap</h4>
-              <ul>{response.roadmap.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-            <div className="response-card">
-              <h4>Opportunities</h4>
-              <ul>{response.opportunities.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-            <div className="response-card">
-              <h4>Resume</h4>
-              <ul>{response.resume.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-            <div className="response-card">
-              <h4>Interview</h4>
-              <ul>{response.interview.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-            <div className="response-card">
-              <h4>Weekly plan</h4>
-              <ul>{response.weekly.map((item) => <li key={item}>{item}</li>)}</ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const [isLoading, setIsLoading] = useState(false);
+  const [response, setResponse] = useState(localPlan('frontend internship roadmap'));
+  const fetchAIResponse = async (userPrompt) => { setIsLoading(true); try { const data = await apiRequest('/chat', { method: 'POST', body: JSON.stringify({ message: userPrompt }) }); setResponse(data?.title && data.source !== 'local' ? data : localPlan(userPrompt)); } catch { setResponse(localPlan(userPrompt)); } finally { setIsLoading(false); } };
+  const handleSubmit = (event) => { event.preventDefault(); const text = prompt.trim(); if (text) fetchAIResponse(text); };
+  return <div className="page-content"><div className="section-heading"><p className="eyebrow">Career planner</p><h2>A practical plan for your next career move</h2><p>Ask about a role, internship, aptitude, resume, placement, or learning path.</p></div><div className="glass-card panel-card assistant-panel"><form onSubmit={handleSubmit} className="advisor-form"><input type="text" placeholder="Example: frontend internship roadmap" value={prompt} onChange={(e) => setPrompt(e.target.value)} disabled={isLoading} /><button className="primary-btn" type="submit" disabled={isLoading}>{isLoading ? 'Preparing…' : 'Build my plan'}</button></form><div className="prompt-list">{suggestions.map((item) => <button className="secondary-btn prompt-btn" key={item} onClick={() => { setPrompt(item); fetchAIResponse(item); }} disabled={isLoading}>{item}</button>)}</div><section className="feedback-box"><strong>{response.title}</strong><p>{response.summary}</p><div className="response-stack">{[['Roadmap', response.roadmap], ['Where to apply / learn', response.opportunities], ['Resume', response.resume], ['Interview', response.interview], ['This week', response.weekly]].map(([heading, items]) => <div className="response-card" key={heading}><h4>{heading}</h4><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}</div></section></div></div>;
 }
 
 export default AIAssistantPage;
